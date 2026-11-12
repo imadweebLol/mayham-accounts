@@ -7,7 +7,7 @@ import { qk } from '../../data';
 export function MayhamUpdates() {
   const [busy,setBusy] = useState(false);
   const [available,setAvailable] = useState<string | null>(null);
-  const [message,setMessage] = useState('Mayham v0.2.0 supports signed in-app updates. The publisher must configure the release repository and signing key when building the installer.');
+  const [message,setMessage] = useState('No update available right now.');
   const qc = useQueryClient();
   const check=async()=>{
     setBusy(true);
@@ -15,7 +15,7 @@ export function MayhamUpdates() {
       const result=await api.selfUpdateCheck();
       setAvailable(result.available);
       qc.setQueryData(qk.appUpdate,result);
-      setMessage(result.available ? `Mayham Accounts ${result.available} is available to install.` : 'No newer signed Mayham update was found. An update channel must be configured when publishing.');
+      setMessage(result.available ? `Mayham Accounts ${result.available} is available to install.` : 'No update available right now.');
     } catch(e){setMessage(`Could not check for updates: ${String(e)}`);}
     finally{setBusy(false);}
   };
