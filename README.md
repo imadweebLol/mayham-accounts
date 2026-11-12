@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div align="center">
 
 <img src="docs/images/banner-wide.png" alt="RoALT: every Roblox alt, one click from any game. Free account manager and multi-client launcher for Windows." width="100%">
@@ -726,3 +727,7 @@ change how its client behaves at any time.
 <br>
 <sub>Made for people with too many alts. &nbsp;·&nbsp; <a href="https://discord.gg/roaltdev">Discord</a> &nbsp;·&nbsp; <a href="https://github.com/inspectsoftware/RoALT/releases/latest">Download</a></sub>
 </div>
+=======
+# mayham-accounts
+mayham accounts
+>>>>>>> origin/main
