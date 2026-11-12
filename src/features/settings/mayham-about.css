@@ -1,0 +1,19 @@
+@layer views {
+  .mayham-about-stack { display:grid; gap:18px; max-width:900px; }
+  .mayham-about-card { position:relative; overflow:hidden; padding:26px; border:1px solid color-mix(in srgb,var(--accent) 27%,var(--line)); border-radius:20px; background:linear-gradient(130deg,color-mix(in srgb,var(--accent) 9%,var(--surface-1)),var(--surface-1) 72%); box-shadow:0 12px 36px rgb(0 0 0 / 0.12); }
+  .mayham-about-card:first-child:after { content:""; pointer-events:none; position:absolute; top:-80px; right:-70px; width:230px; height:230px; border-radius:50%; background:color-mix(in srgb,var(--accent) 12%,transparent); filter:blur(45px); }
+  .mayham-about-card h2 { font-size:23px; font-weight:750; letter-spacing:-.035em; margin:2px 0 8px; }
+  .mayham-about-card p { max-width:740px; color:var(--fg-2); line-height:1.65; margin:0 0 14px; }
+  .mayham-about-card strong { color:var(--fg); }
+  .mayham-credit-heading { display:flex; align-items:center; gap:18px; margin-bottom:18px; }
+  .mayham-credit-heading img { width:88px; height:88px; object-fit:contain; filter:drop-shadow(0 0 14px color-mix(in srgb,var(--accent) 38%,transparent)); }
+  .mayham-credit-heading p { margin:0; }
+  .mayham-about-card .mayham-eyebrow { color:var(--accent-text); font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:750; margin:0 0 7px; }
+  .mayham-about-pills,.mayham-credit-actions { display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+  .mayham-about-pills span { background:color-mix(in srgb,var(--accent) 12%,var(--surface-2)); border:1px solid color-mix(in srgb,var(--accent) 23%,var(--line)); padding:7px 12px; border-radius:999px; font-size:12px; }
+  .mayham-version { margin-top:21px; font-size:12px; color:var(--fg-3); }
+  .mayham-credit-actions button { padding:10px 14px; border-radius:12px; background:var(--surface-2); border:1px solid color-mix(in srgb,var(--accent) 26%,var(--line)); font-size:13px; font-weight:600; cursor:pointer; }
+  .mayham-credit-actions button:hover { background:var(--surface-3); border-color:var(--accent); }
+  .mayham-upstream { background:var(--surface-1); }
+  @media(max-width:500px) { .mayham-about-card { padding:18px; } .mayham-credit-heading img { width:62px; height:62px; } }
+}

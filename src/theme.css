@@ -1,0 +1,39 @@
+/* RoALT's styles. Layer order first: our layers wrap Tailwind's, and utilities sit above them so a
+   view can always adjust with a class; only the forced-colours rules (a11y) outrank utilities. Each
+   feature's own sheet (features/<view>/<view>.css) sits in `views`. Tokens: styles/tokens.css. */
+@layer tokens, theme, base, components, views, utilities, a11y;
+
+@import "tailwindcss";
+@import "./styles/tokens.css";
+@import "./styles/base.css";
+@import "./styles/controls.css";
+@import "./styles/surfaces.css";
+@import "./styles/overlays.css";
+@import "./styles/titlebar.css";
+@import "./styles/island.css";
+@import "./styles/bg-image.css";
+@import "./styles/a11y.css";
+@import "./styles/motion.css";
+@import "./styles/mayham-skin.css";
+@import "./styles/mayham-flat.css";
+@import "./styles/mayham-layout.css";
+
+/* Utilities: bg-surface, text-fg-2, border-edge, text-ok ... Only the colours in use are mapped;
+   Tailwind's own palette is off: colour comes from tokens. */
+@theme inline {
+  --color-*: initial;
+  --color-surface: var(--surface-1);
+  --color-surface-3: var(--surface-3);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-edge: var(--edge);
+  --color-ok: var(--ok);
+  --color-attention: var(--attention);
+  --color-hover: var(--hover);
+  --color-sel: var(--sel);
+  --color-line: var(--line);
+  --color-accent-text: var(--accent-text);
+  --font-sans: var(--font-ui);
+  --font-mono: var(--font-code);
+}

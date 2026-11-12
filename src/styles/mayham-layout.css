@@ -1,0 +1,8 @@
+/* The original island remains available in RoALT mode.
+   Users may turn just its bubble/ink motion off without disabling other app features. */
+@layer utilities {
+  :root[data-mayham-layout="roalt"][data-mayham-bubbles="off"] .island-drops,
+  :root[data-mayham-layout="roalt"][data-mayham-bubbles="off"] .lq-drop,
+  :root[data-mayham-layout="roalt"][data-mayham-bubbles="off"] .lq-ink,
+  :root[data-mayham-layout="roalt"][data-mayham-bubbles="off"] .lq-ripple { display: none !important; }
+}

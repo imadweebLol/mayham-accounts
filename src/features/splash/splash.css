@@ -1,0 +1,172 @@
+/* The start-up splash (Splash.tsx), from the approved design canvas: one 3.8 s timeline, every
+   layer keyed to the same percentages. It settles at 79% and holds; the window grows 2 s later
+   (`splash_done`), then the splash fades. */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  /* Always dark: the window opens dark before any theme applies. The cube takes the user's accent
+     (main.tsx sets --splash-accent from the cached one; white by default). */
+  background: #0a0a0a;
+  color: #ededed;
+  transition: opacity 300ms var(--ease-out);
+}
+.splash.out {
+  opacity: 0;
+  pointer-events: none;
+}
+.splash * {
+  animation-duration: 3.8s;
+  animation-fill-mode: both;
+}
+.splash .logo { position: relative; width: 120px; height: 120px; }
+.splash .logo svg { position: absolute; inset: 0; }
+.splash .cube {
+  position: absolute;
+  left: 6.7px;
+  top: 6.7px;
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  background: var(--splash-accent, #f5f5f5);
+  animation-name: splash-cube;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.splash .tile { position: absolute; inset: 0; animation-name: splash-tile; }
+.splash .red, .splash .cyan, .splash .core { mix-blend-mode: screen; }
+.splash .red { animation-name: splash-red; }
+.splash .cyan { animation-name: splash-cyan; }
+.splash .core { animation-name: splash-core; }
+.splash .slice-a { clip-path: inset(46% 0 38% 0); animation-name: splash-slice-a; }
+.splash .slice-b { clip-path: inset(70% 0 18% 0); animation-name: splash-slice-b; }
+.splash .word {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation-name: splash-word;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.splash .word b { font-size: 20px; font-weight: 700; letter-spacing: 0.12em; }
+.splash .word span { font-family: var(--font-code); font-size: 11px; color: #949494; }
+.splash .scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(0deg, rgb(255 255 255 / 0.07) 0px, rgb(255 255 255 / 0.07) 1px, transparent 1px, transparent 3px);
+  animation-name: splash-scan;
+}
+
+@keyframes splash-tile {
+  0%, 45% { transform: translate(-16.7px, -16.7px); }
+  45.5%, 47% { transform: translate(-13px, -20px); }
+  47.5%, 49% { transform: translate(-22px, -15px); }
+  49.5%, 51% { transform: translate(-15px, -17px); }
+  51.5%, 53% { transform: translate(-19px, -18px); }
+  53.5%, 64.4% { transform: translate(-16.7px, -16.7px); }
+  /* The teleport: paired stops snap instead of sliding. */
+  64.5%, 65.4% { transform: translate(-19px, -14px); }
+  65.5%, 66.4% { transform: translate(2px, -2px); }
+  66.5%, 67.4% { transform: translate(-1px, 1px); }
+  67.5%, 100% { transform: translate(0, 0); }
+}
+@keyframes splash-core {
+  0%, 45% { opacity: 1; }
+  46% { opacity: 0.25; }
+  47% { opacity: 1; }
+  48.5% { opacity: 0; }
+  49.5% { opacity: 1; }
+  51% { opacity: 0.4; }
+  52% { opacity: 1; }
+  53% { opacity: 0.15; }
+  54%, 64.4% { opacity: 1; }
+  64.5%, 65.4% { opacity: 0.15; }
+  65.5%, 66.4% { opacity: 0.6; }
+  66.5%, 100% { opacity: 1; }
+}
+@keyframes splash-red {
+  0%, 24% { opacity: 0; transform: translate(0, 0); }
+  27% { opacity: 0.9; transform: translate(-1px, 0); }
+  32% { transform: translate(-3px, 1px); }
+  37% { transform: translate(-5px, 0); }
+  40% { transform: translate(-4px, -1px); }
+  43% { transform: translate(-8px, 1px); }
+  45% { transform: translate(-11px, 2px); }
+  47% { transform: translate(7px, -3px); }
+  49% { transform: translate(-14px, 0); }
+  51% { transform: translate(4px, 3px); }
+  53% { opacity: 0.9; transform: translate(-9px, -2px); }
+  54%, 64.4% { opacity: 0; transform: translate(0, 0); }
+  64.5%, 65.4% { opacity: 0.9; transform: translate(-6px, 1px); }
+  65.5%, 66.4% { opacity: 0.7; transform: translate(4px, 0); }
+  66.5%, 100% { opacity: 0; transform: translate(0, 0); }
+}
+@keyframes splash-cyan {
+  0%, 24% { opacity: 0; transform: translate(0, 0); }
+  27% { opacity: 0.9; transform: translate(1px, 0); }
+  32% { transform: translate(3px, -1px); }
+  37% { transform: translate(5px, 1px); }
+  40% { transform: translate(4px, 0); }
+  43% { transform: translate(8px, -1px); }
+  45% { transform: translate(11px, -2px); }
+  47% { transform: translate(-6px, 3px); }
+  49% { transform: translate(13px, 1px); }
+  51% { transform: translate(-5px, -2px); }
+  53% { opacity: 0.9; transform: translate(10px, 2px); }
+  54%, 64.4% { opacity: 0; transform: translate(0, 0); }
+  64.5%, 65.4% { opacity: 0.9; transform: translate(6px, -1px); }
+  65.5%, 66.4% { opacity: 0.7; transform: translate(-4px, 1px); }
+  66.5%, 100% { opacity: 0; transform: translate(0, 0); }
+}
+@keyframes splash-slice-a {
+  0%, 45% { opacity: 0; transform: translateX(0); }
+  45.5%, 47% { opacity: 1; transform: translateX(18px); }
+  47.5%, 49% { opacity: 1; transform: translateX(-10px); }
+  49.5%, 51% { opacity: 0; }
+  51.5%, 53% { opacity: 1; transform: translateX(24px); }
+  53.5%, 65.4% { opacity: 0; transform: translateX(0); }
+  65.5%, 66.4% { opacity: 1; transform: translateX(-14px); }
+  66.5%, 100% { opacity: 0; transform: translateX(0); }
+}
+@keyframes splash-slice-b {
+  0%, 46% { opacity: 0; transform: translateX(0); }
+  46.5%, 48% { opacity: 1; transform: translateX(-22px); }
+  48.5%, 50% { opacity: 0; }
+  50.5%, 52.5% { opacity: 1; transform: translateX(14px); }
+  53%, 100% { opacity: 0; transform: translateX(0); }
+}
+@keyframes splash-cube {
+  0%, 54% { opacity: 0; transform: scale(0.4); box-shadow: 0 0 0 transparent; }
+  55% { opacity: 1; transform: scale(1.18); box-shadow: 0 0 40px color-mix(in srgb, var(--splash-accent, #f5f5f5) 80%, transparent); }
+  56% { opacity: 0.2; }
+  57% { opacity: 1; transform: scale(1.1); }
+  61% { transform: scale(1); box-shadow: 0 0 28px color-mix(in srgb, var(--splash-accent, #f5f5f5) 45%, transparent); }
+  100% { opacity: 1; transform: scale(1); box-shadow: 0 0 14px color-mix(in srgb, var(--splash-accent, #f5f5f5) 22%, transparent); }
+}
+@keyframes splash-word {
+  0%, 68% { opacity: 0; transform: translateY(8px); letter-spacing: 0.3em; }
+  79%, 100% { opacity: 1; transform: translateY(0); letter-spacing: 0.12em; }
+}
+@keyframes splash-scan {
+  0%, 44% { opacity: 0; }
+  45% { opacity: 0.5; }
+  47% { opacity: 0.15; }
+  49% { opacity: 0.6; }
+  51% { opacity: 0.1; }
+  53% { opacity: 0.45; }
+  54%, 64.4% { opacity: 0; }
+  64.5% { opacity: 0.5; }
+  65.5% { opacity: 0.2; }
+  66.5% { opacity: 0.4; }
+  67.5%, 100% { opacity: 0; }
+}
+
+.splash { background: radial-gradient(ellipse at center, #251038 0%, #0e0818 72%); }
+.splash .mayham-splash-icon { width:160px;height:160px;object-fit:contain;filter:drop-shadow(0 0 24px #8d2fff99);animation:mayham-rise 1.2s ease-out both; }
+.splash .word b { letter-spacing:.06em;color:#f1d9ff; }
+@keyframes mayham-rise {from {transform:scale(.65);opacity:0;}to{transform:scale(1);opacity:1;}}

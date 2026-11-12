@@ -1,0 +1,133 @@
+import { useEffect, useRef, useState } from "react";
+import { openUrl } from "@tauri-apps/plugin-opener";
+import { fmtDate, fmtList, t } from "../../i18n";
+import { Chip, Skeleton } from "../../ui/Bits";
+import { Button, IconButton } from "../../ui/Button";
+import { toastError } from "../../ui/Toast";
+import { ago } from "../accounts/shared";
+import { markRead, useNewsFeed, type FeedItem } from "./news";
+import "./news.css";
+
+type Source = FeedItem["source"];
+const SOURCES: Source[] = ["devforum", "newsroom", "client"];
+const LABEL = { roalt: "news.src.roalt", devforum: "news.src.devforum", newsroom: "news.src.newsroom", client: "news.src.client" } as const;
+/** Lines a release shows before "All notes". */
+const DAY = 24 * 60 * 60_000;
+/** Leaving News marks what it showed as read (`NewsView`). */
+let leaving = 0;
+
+/** "3 h ago" within a week, else the date; a month alone (the newsroom) as month and year. */
+function when(published: string, now: number) {
+  if (!published) return "";
+  const ms = Date.parse(published);
+  if (Number.isNaN(ms)) return "";
+  if (/^\d{4}-\d{2}$/.test(published)) return fmtDate(ms, { month: "long", year: "numeric", timeZone: "UTC" });
+  return now - ms < 7 * DAY ? ago(ms, now) : fmtDate(ms, { day: "numeric", month: "short", year: "numeric" });
+}
+
+function open(item: FeedItem) {
+  markRead([item.id]);
+  if (item.url) openUrl(item.url).catch(toastError);
+}
+
+function Row({ item, now }: { item: FeedItem; now: number }) {
+  const body = (
+    <>
+      <span className="news-dot" data-on={item.unread || undefined} role={item.unread ? "img" : undefined} aria-label={item.unread ? t("news.unread") : undefined} />
+      <span className="min-w-0 flex flex-col gap-1">
+        <span className="news-meta">
+          <b>{t(LABEL[item.source])}</b>
+          <span>{when(item.published, now)}</span>
+        </span>
+        <span className="news-title">{item.title}</span>
+        {item.summary && <span className="news-sum">{item.summary}</span>}
+      </span>
+    </>
+  );
+  // The client update has nowhere to go: RoALT already uses it.
+  if (!item.url) return <div className="news-row" data-unread={item.unread || undefined}>{body}</div>;
+  return (
+    <button type="button" className="news-row" data-unread={item.unread || undefined} data-tip={t("news.open")} onClick={() => open(item)}>
+      {body}
+    </button>
+  );
+}
+
+/** Home's News tab: Roblox and community sources only, newest first.
+ * Leaving it marks what it showed as read. */
+export function NewsView() {
+  const { items, unread, failed, query } = useNewsFeed();
+  const [filter, setFilter] = useState<Source | "all">("all");
+  const now = Date.now();
+  const shownIds = useRef<string[]>([]);
+  shownIds.current = items.map((i) => i.id);
+  // A tick late, and called off by a mount in between: a remount (React's dev double mount) isn't leaving.
+  useEffect(() => {
+    clearTimeout(leaving);
+    return () => {
+      const ids = shownIds.current;
+      leaving = window.setTimeout(() => markRead(ids));
+    };
+  }, []);
+
+  const feed = items.filter((i) => filter === "all" || i.source === filter);
+  const count = (s: Source | "all") => items.filter((i) => i.unread && (s === "all" || i.source === s)).length || undefined;
+  const sources = SOURCES.filter((s) => items.some((i) => i.source === s));
+  const down = failed.map((s) => t(LABEL[s]));
+
+  return (
+    <section aria-labelledby="news-title" className="flex flex-col gap-5 min-w-0">
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0">
+          <h1 id="news-title" className="page-title">{t("news.tab")}</h1>
+          <p className="page-sub">{unread ? "Roblox and community updates" : "Roblox and community news"}</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button size="md" icon="check" disabled={!unread} onClick={() => markRead(items.map((i) => i.id))}>
+            {t("news.markRead")}
+          </Button>
+          <IconButton icon="refresh" label={t("news.refresh")} disabled={query.isFetching} onClick={() => void query.refetch()} />
+        </div>
+      </header>
+      {(down.length > 0 || query.isError) && (
+        <div className="notice" data-tone="attention" role="status">
+          <p className="alert flex-[1_1_240px] min-w-0">{t("news.failed", { sources: fmtList(down.length ? down : [t("news.tab")]) })}</p>
+          <Button size="sm" busy={query.isFetching} onClick={() => void query.refetch()}>
+            {t("common.tryAgain")}
+          </Button>
+        </div>
+      )}
+      <section className="panel mayham-release" aria-label="Mayham Accounts v0.1 release announcement" style={{padding:"18px 22px",borderLeft:"3px solid var(--accent)"}}>
+        <h2 style={{fontSize:18,fontWeight:750}}>Mayham Accounts v0.1 — New Menu Release!</h2>
+        <p className="page-sub" style={{marginTop:8}}>Welcome to the first Mayham Accounts menu release. Explore the refreshed solid-style navigation, optional RoALT-inspired layout, custom themes, your own background images, and the new Macro Mayham Macros area.</p>
+        <p className="page-sub" style={{marginTop:8}}>Credits for this release: Macro Mayham (Mayham Accounts customisation) and inspectsoftware / the original RoALT developers (upstream project). Thanks to the RoALT community — discord.gg/roaltdev.</p>
+      </section>
+      <div className="news-grid">
+        
+        <div className="panel news-feed">
+          {sources.length > 1 && (
+            <div className="news-filters" role="group" aria-label={t("news.sources")}>
+              <Chip small pressed={filter === "all"} count={count("all")} onClick={() => setFilter("all")}>{t("news.all")}</Chip>
+              {sources.map((s) => (
+                <Chip key={s} small pressed={filter === s} count={count(s)} onClick={() => setFilter(s)}>{t(LABEL[s])}</Chip>
+              ))}
+            </div>
+          )}
+          {query.isPending
+            ? [78, 64, 84, 58].map((w) => (
+                <div key={w} className="news-row" aria-hidden="true">
+                  <span />
+                  <span className="flex flex-col gap-2">
+                    <Skeleton width={96} height={10} />
+                    <Skeleton width={`${w}%`} height={13} />
+                    <Skeleton width="92%" height={11} />
+                  </span>
+                </div>
+              ))
+            : feed.map((i) => <Row key={i.id} item={i} now={now} />)}
+          {!query.isPending && !feed.length && <p className="news-empty">{t("news.empty")}</p>}
+        </div>
+      </div>
+    </section>
+  );
+}

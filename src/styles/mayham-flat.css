@@ -1,0 +1,112 @@
+/* Solid layout only. Mayham classic mode uses untouched upstream components. */
+/* Mayham Accounts: solid desktop redesign. Explicitly removes RoALT's liquid/glass treatment.
+   Kept separate from upstream view styles so account handling and existing controls are preserved. */
+@layer  utilities  {
+  :root:not([data-mayham-layout="roalt"]) {
+    --r-pill: 10px;
+    --r-xl: 14px;
+    --r-lg: 12px;
+    --r-md: 9px;
+    --r-sm: 7px;
+    --titlebar-h: 58px;
+    --page-gap: 20px;
+    --page-pt: 26px;
+    --line: color-mix(in srgb, var(--accent) 12%, #4a4357);
+    --shadow-island: none;
+    --shadow-thumb: none;
+    --shadow-pop: 0 12px 30px rgb(0 0 0 / 0.35);
+    --shadow-dialog: 0 22px 56px rgb(0 0 0 / 0.5);
+    --spring: ease-out;
+    --spring-soft: ease-out;
+    --dur-view-in: 100ms;
+    --dur-view-out: 100ms;
+    --dur-spring: 140ms;
+    --dur-spring-slow: 180ms;
+    --pop-scale: 1;
+    --drop-scale: 1;
+    --rise-md: 0px;
+    --rise-sm: 0px;
+    --press-scale: 1;
+    --press-deep: 1;
+  }
+  :root:not([data-mayham-layout="roalt"]) body, :root:not([data-mayham-layout="roalt"]) .app, :root:not([data-mayham-layout="roalt"]) .shell, :root:not([data-mayham-layout="roalt"]) .stage { background-color: var(--ground); }
+  :root:not([data-mayham-layout="roalt"]) .titlebar {
+    background: var(--surface-1);
+    border-bottom: 1px solid var(--line);
+    box-shadow: none;
+  }
+  :root:not([data-mayham-layout="roalt"]) .titlebar .app-menu-btn { border-radius: 8px; }
+  :root:not([data-mayham-layout="roalt"]) .titlebar .app-menu-btn .wordmark { font-weight: 800; letter-spacing: -.03em; }
+  :root:not([data-mayham-layout="roalt"]) .mayham-menu-logo { filter: none !important; }
+
+  /* The navigation now uses standard flat selected tabs, not an animated goo blob. */
+  :root:not([data-mayham-layout="roalt"]) .island {
+    height: 42px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    border-radius: 10px;
+    box-shadow: none;
+    backdrop-filter: none !important;
+  }
+  :root:not([data-mayham-layout="roalt"]) .island-drops, :root:not([data-mayham-layout="roalt"]) .lq-drop, :root:not([data-mayham-layout="roalt"]) .lq-ink, :root:not([data-mayham-layout="roalt"]) .lq-ripple { display: none !important; }
+  :root:not([data-mayham-layout="roalt"]) .island-item { border-radius: 7px; transition: background-color 100ms ease, color 100ms ease !important; }
+  :root:not([data-mayham-layout="roalt"]) .island-item[aria-current="page"] {
+    color: var(--on-accent);
+    background: var(--accent);
+    box-shadow: none;
+  }
+  :root:not([data-mayham-layout="roalt"]) .island-item[data-open] { background: var(--surface-3); color: var(--fg); }
+  :root:not([data-mayham-layout="roalt"]) .island-item:hover:not([aria-current="page"]) { background: var(--hover); }
+  :root:not([data-mayham-layout="roalt"]) .island-item:active { scale: 1; }
+  :root:not([data-mayham-layout="roalt"]) .island-label { font-weight: 650; }
+
+  /* Panels: matte fills, structured edges, no translucency or floating glass. */
+  :root:not([data-mayham-layout="roalt"]) .panel, :root:not([data-mayham-layout="roalt"]) .rail, :root:not([data-mayham-layout="roalt"]) .home-card, :root:not([data-mayham-layout="roalt"]) .set-group {
+    background: var(--surface-1) !important;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  :root:not([data-mayham-layout="roalt"]) .panel:hover, :root:not([data-mayham-layout="roalt"]) .home-card:hover { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+  :root:not([data-mayham-layout="roalt"]) .well, :root:not([data-mayham-layout="roalt"]) .set-row, :root:not([data-mayham-layout="roalt"]) .rail-count { background: var(--surface-2); border-radius: var(--r-md); }
+  :root:not([data-mayham-layout="roalt"]) .rail { margin: 8px; }
+  :root:not([data-mayham-layout="roalt"]) .rail-item { border-radius: 7px; }
+  :root:not([data-mayham-layout="roalt"]) .rail-item[aria-current="page"] {
+    background: color-mix(in srgb, var(--accent) 17%, var(--surface-2));
+    color: var(--fg);
+    border-inline-start: 3px solid var(--accent);
+    box-shadow: none;
+  }
+  :root:not([data-mayham-layout="roalt"]) .page-title { font-weight: 800; letter-spacing: -.045em; }
+  :root:not([data-mayham-layout="roalt"]) .section-title, :root:not([data-mayham-layout="roalt"]) .set-heading { font-weight: 750; }
+  :root:not([data-mayham-layout="roalt"]) .page { background: var(--ground); }
+  :root:not([data-mayham-layout="roalt"]) .set-group { padding: 6px; }
+  :root:not([data-mayham-layout="roalt"]) .set-row { background: transparent; }
+  :root:not([data-mayham-layout="roalt"]) .set-row:hover { background: var(--hover); }
+  :root:not([data-mayham-layout="roalt"]) .set-label { font-weight: 650; }
+  :root:not([data-mayham-layout="roalt"]) .home-grid { gap: 14px; }
+
+  :root:not([data-mayham-layout="roalt"]) :is(.btn, .field, .chip, .seg-group, .status-pill) {
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  :root:not([data-mayham-layout="roalt"]) :is(.btn, .chip, .seg-group) { border-radius: 8px; }
+  :root:not([data-mayham-layout="roalt"]) :is(.dlg, .drawer, [popover], .toast) {
+    background: var(--surface-1) !important;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    backdrop-filter: none !important;
+    filter: none !important;
+  }
+  /* Remove reveal-circle, blur/melt, spring and wave transitions. Keep fast fades for orientation. */
+  :root:not([data-mayham-layout="roalt"]) ::view-transition-old(.view-out), :root:not([data-mayham-layout="roalt"]) ::view-transition-new(.view-in), :root:not([data-mayham-layout="roalt"]) ::view-transition-old(root), :root:not([data-mayham-layout="roalt"]) ::view-transition-new(root) { animation: none !important; }
+  :root:not([data-mayham-layout="roalt"])[data-bg] :is(.titlebar, .stage) { text-shadow: none !important; }
+  :root:not([data-mayham-layout="roalt"])[data-bg] :is(.titlebar .caption-btn, .titlebar .wc, .stage summary) svg { filter: none !important; }
+  :root:not([data-mayham-layout="roalt"])[data-bg] :is(.panel, .well, .rail, .set-group, .home-card) { backdrop-filter: none !important; }
+  :root:not([data-mayham-layout="roalt"]) :is(.dlg, .drawer) { scale: 1 !important; }
+  @media  (prefers-reduced-motion: reduce)  {
+    :root:not([data-mayham-layout="roalt"]) *, :root:not([data-mayham-layout="roalt"]) *::before, :root:not([data-mayham-layout="roalt"]) *::after { scroll-behavior: auto !important; }
+  }
+}

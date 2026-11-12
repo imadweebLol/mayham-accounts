@@ -1,0 +1,66 @@
+@layer views {
+  .mayham-studio { border:1px solid color-mix(in srgb,var(--accent) 38%,transparent); background:color-mix(in srgb,var(--surface-1) 92%,transparent); border-radius:var(--r-xl); padding:20px; margin-bottom:22px; box-shadow:var(--mayham-glow); }
+  .mayham-studio-header {display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .mayham-studio-header img {width:58px;height:58px;object-fit:contain}
+  .mayham-studio h2 {font-size:20px;font-weight:750;color:var(--fg)}
+  .mayham-studio h3 {font-size:17px;font-weight:750;margin:20px 0 8px;color:var(--fg)}
+  .mayham-studio p,.mayham-caption {color:var(--fg-2);font-size:12px}
+  .mayham-tabs {display:flex;gap:10px;border-bottom:1px solid var(--line);padding-bottom:12px}
+  .mayham-tabs button,.mayham-actions button {border-radius:12px;border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));padding:10px 16px;background:var(--surface-2);color:var(--fg);font-size:13px;font-weight:650;cursor:pointer}
+  .mayham-tabs button.selected,.mayham-actions button:first-child {border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface-1))}
+  .mayham-theme-grid {display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:16px}
+  .mayham-preset {text-align:left;min-width:0; padding:10px;border:1px solid var(--line);background:var(--surface-2);border-radius:14px;cursor:pointer;color:var(--fg);transition:border-color .15s,transform .15s}
+  .mayham-preset:hover {border-color:var(--accent);transform:translateY(-2px)}
+  .mayham-preset.active {outline:2px solid var(--accent);box-shadow:var(--mayham-glow)}
+  .mayham-preset strong {display:block;font-size:13px;margin:8px 2px 5px}
+  .mayham-preset small {display:block;color:var(--fg-2);font-size:11px;min-height:32px;margin:0 2px}
+  .mayham-preview {height:94px;border:1px solid #ffffff35;display:flex;gap:10px;border-radius:10px;padding:9px;overflow:hidden}
+  .mayham-mini-rail {display:block;width:27%;border-radius:6px;opacity:.85}
+  .mayham-mini-content {display:grid;grid-template-columns:1fr 1fr;grid-template-rows:14px 1fr;gap:8px;flex:1}
+  .mayham-mini-content i {grid-column:span 2;border-radius:5px;opacity:.6}
+  .mayham-mini-content b {border-radius:7px;opacity:.85}
+  .mayham-controls {display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:18px;padding:18px 0}
+  .mayham-controls label {display:flex;flex-direction:column;gap:9px;color:var(--fg);font-size:13px;font-weight:650}
+  .mayham-controls label span {color:var(--fg-2);font-weight:400}
+  .mayham-controls select {max-width:100%;border:1px solid var(--line);background:var(--surface-2);padding:10px;border-radius:10px;color:var(--fg)}
+  .mayham-controls select option {background:#1f1630;color:white}
+  .mayham-controls input[type=range] {accent-color:var(--accent);width:100%}
+  .mayham-controls .mayham-color-row {flex-direction:row;align-items:center;flex-wrap:wrap}
+  .mayham-color-row input[type=color] {width:50px;height:36px;border:0;background:none;cursor:pointer}
+  .mayham-actions {display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+  .mayham-studio button:focus-visible,.mayham-studio select:focus-visible {outline:2px solid var(--accent);outline-offset:3px}
+  :root[data-mayham] .app-menu-btn .mayham-menu-logo {width:28px;height:28px;object-fit:contain;margin-right:5px}
+  :root[data-mayham] .panel {box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 13%,transparent),var(--mayham-glow)}
+  :root[data-mayham] .app-menu-btn {max-width:250px}
+  :root[data-mayham] .wordmark {font-weight:800;letter-spacing:-.4px}
+}
+
+@layer views {
+  .mayham-credits { padding: 22px; margin-bottom: 16px; }
+  .mayham-credit-heading { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .mayham-credit-heading img { width:48px; height:48px; object-fit:contain; }
+  .mayham-credit-heading h2 { font-size:18px; font-weight:750; color:var(--fg); }
+  .mayham-credits p { color:var(--fg-2); line-height:1.65; margin:0 0 10px; }
+  .mayham-credit-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+  .mayham-credit-actions button { cursor:pointer; color:var(--fg); font-size:13px; padding:9px 13px; background:var(--surface-2); border:1px solid var(--line); border-radius:var(--r-md); }
+  .mayham-credit-actions button:hover { border-color:var(--accent); color:var(--accent-text); }
+}
+
+@layer views {
+  .mayham-saved-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:12px 0 20px; }
+  .mayham-saved-card {padding:15px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;gap:8px;}
+  .mayham-saved-card small{color:var(--fg-2)}
+  .mayham-toggle {grid-column:span 1;}
+  .mayham-toggle input{width:20px;height:20px;accent-color:var(--accent)}
+  .mayham-save-box{padding:16px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;margin:10px 0;}
+  .mayham-save-box>label{font-weight:750;display:block;margin-bottom:8px;}
+  .mayham-save-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
+  .mayham-save-row input{min-width:180px;flex:1;background:var(--surface-1);border:1px solid var(--line);color:var(--fg);border-radius:8px;padding:10px;}
+  .mayham-save-row button{background:var(--accent);color:var(--on-accent);padding:8px 16px;border-radius:8px;font-weight:750;cursor:pointer;}
+}
+
+@layer views {
+  .mayham-preset .mayham-builtin-pick{width:100%;color:inherit;text-align:left;cursor:pointer}
+  .mayham-preset .mayham-hide{font-size:11px;color:var(--fg-2);background:var(--surface-1);padding:5px 8px;border:1px solid var(--line);border-radius:6px;margin:5px 0 0 2px;cursor:pointer}
+  .mayham-preset .mayham-hide:hover{border-color:var(--accent);color:var(--fg)}
+}

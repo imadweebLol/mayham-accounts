@@ -1,0 +1,73 @@
+name: Mayham Accounts - Signed Release
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  windows-release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - name: Verify tag, public key and signing secret exist
+        shell: pwsh
+        env:
+          UPDATE_PUB: ${{ vars.MAYHAM_UPDATE_PUBLIC_KEY }}
+          UPDATE_PRIVATE_B64: ${{ secrets.MAYHAM_UPDATE_PRIVATE_KEY_B64 }}
+        run: |
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          if ('${{ github.ref_type }}' -ne 'tag') { throw 'Create a vX.Y.Z tag to publish a release.' }
+          if ('${{ github.ref_name }}' -ne "v$version") { throw "Release tag does not match package.json version $version" }
+          if ($env:UPDATE_PUB -notmatch '^[a-fA-F0-9]{128}$') { throw 'Set repository variable MAYHAM_UPDATE_PUBLIC_KEY.' }
+          if (-not $env:UPDATE_PRIVATE_B64) { throw 'Set secret MAYHAM_UPDATE_PRIVATE_KEY_B64.' }
+      - name: Install Perl needed by vendored OpenSSL
+        shell: pwsh
+        run: |
+          choco install strawberryperl -y --no-progress
+          'C:\Strawberry\perl\bin' >> $env:GITHUB_PATH
+          'C:\Strawberry\c\bin' >> $env:GITHUB_PATH
+      - run: npm ci --no-audit --no-fund
+      - name: Build signed-update-enabled NSIS installer
+        shell: pwsh
+        env:
+          MAYHAM_UPDATE_REPO: ${{ github.repository }}
+          MAYHAM_UPDATE_PUBLIC_KEY: ${{ vars.MAYHAM_UPDATE_PUBLIC_KEY }}
+          OPENSSL_RUST_USE_NASM: '0'
+        run: npm run tauri -- build --bundles nsis
+      - name: Sign versioned release installer
+        shell: pwsh
+        env:
+          UPDATE_PRIVATE_B64: ${{ secrets.MAYHAM_UPDATE_PRIVATE_KEY_B64 }}
+          UPDATE_PUB: ${{ vars.MAYHAM_UPDATE_PUBLIC_KEY }}
+        run: |
+          python -m pip install cryptography
+          $keyFile = Join-Path $env:RUNNER_TEMP 'mayham-update-private.pem'
+          [IO.File]::WriteAllBytes($keyFile, [Convert]::FromBase64String($env:UPDATE_PRIVATE_B64))
+          $env:MAYHAM_UPDATE_LOCAL_KEY = $keyFile
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          New-Item -ItemType Directory -Force release-assets | Out-Null
+          $installer = Get-ChildItem src-tauri/target/release/bundle/nsis/*.exe | Select-Object -First 1
+          if (-not $installer) { throw 'No NSIS installer' }
+          $dest = "release-assets/Mayham-Accounts-Setup-$version.exe"
+          Copy-Item $installer.FullName $dest
+          python scripts/verify-mayham-signing-key.py
+          if ($LASTEXITCODE -ne 0) { throw 'Signing key and public key do not match!' }
+          python scripts/mayham-release-sign.py sign $dest --private-key $keyFile
+          if ($LASTEXITCODE -ne 0) { throw 'Signing failed' }
+          Remove-Item $keyFile -Force
+      - name: Publish the signed app update
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create '${{ github.ref_name }}' release-assets/* --title 'Mayham Accounts ${{ github.ref_name }}' --generate-notes --verify-tag

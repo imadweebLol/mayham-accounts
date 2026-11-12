@@ -1,0 +1,8 @@
+@layer components {
+  .panel { border-color:color-mix(in srgb,var(--accent) 13%,var(--line)); border-radius:var(--r-lg); }
+  .panel:hover { border-color:color-mix(in srgb,var(--accent) 22%,var(--line)); }
+  .page-title { letter-spacing:-.045em; font-weight:750; }
+  .app-menu-btn .wordmark { font-weight:760; letter-spacing:-.025em; }
+  .mayham-menu-logo { filter:drop-shadow(0 0 8px color-mix(in srgb,var(--accent) 36%,transparent)); }
+  .set-group { background:linear-gradient(115deg,color-mix(in srgb,var(--accent) 4%,var(--surface-1)),var(--surface-1)); }
+}

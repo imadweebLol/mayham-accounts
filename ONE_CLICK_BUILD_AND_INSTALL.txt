@@ -1,0 +1,14 @@
+Mayham Accounts v0.1 - Combined Build + Installer
+
+Double-click BUILD_MAYHAM_WINDOWS.cmd.
+It builds the full Windows application, creates a setup installer, and opens the installer.
+You do NOT need to run a separate update command afterward.
+
+The official macro repository is preconfigured:
+https://github.com/imadweebLol/Macro-Mayham-Macros
+Discord Application ID: 1569520017224106054
+
+Before installing over your existing copy, back up its saved account data.
+The NSIS installer is created in Mayham Accounts Installer/Mayham-Accounts-Setup.exe.
+
+Test status: translation checker and source archive validated here. Windows executable not built/tested here.
